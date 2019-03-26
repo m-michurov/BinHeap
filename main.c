@@ -20,7 +20,7 @@ int test(
     for (size_t t = 0; t < 255; t++) {
         //printf("Test %u/%d: ", t + 1, 255);
 
-        count = 10 + (unsigned int) rand() % 5000;
+        count = 5000;
 
         array = malloc(count * sizeof(int));
         key = malloc(count * sizeof(int));
@@ -40,18 +40,20 @@ int test(
         for (int k = 0; k < count; k++)
             DecreaseKey(heap, (size_t) k, rand());
 
-        int prev = INT_MIN;
+        int prev = ExtractMin(heap);
         int cur = 0;
 
-        for (int k = 0; k < count; k++) {
-            cur = heap->key[ExtractMin(heap)];
-            if (cur < prev) {
+        for (int k = 1; k < count; k++) {
+            cur = ExtractMin(heap);
+            if (heap->key[cur] < heap->key[prev] || heap->index[cur] < heap->heap_size) {
                 puts("FAILED");
-                printf("count %d  k %d prev %d  cur %d\n", count, k, prev, cur);
+                printf("count %d  k %d prev %d  cur %d prev_key %d  cur_key %d heap_size %d index %d\n",
+                        count, k, prev, cur, heap->key[prev], heap->key[cur], heap->heap_size, heap->index[cur]);
                 free(array);
                 free(key);
+                free(index);
                 free(heap);
-                return 0;
+                return 1;
             } else {
                 prev = cur;
             }
@@ -62,6 +64,7 @@ int test(
 
         free(array);
         free(key);
+        free(index);
         free(heap);
     }
 
@@ -73,8 +76,8 @@ int main(
         void) {
     size_t fail = 0;
     for (size_t k = 0; k < 9; k++) {
+        printf("%d\n", k);
         fail += test();
-        printf("%d - ok\n", k);
     }
 /*
     unsigned int count = 10;
@@ -118,7 +121,7 @@ int main(
         printf("%d\t%d\n", cur, heap->key[cur]);
     }
 */
-    printf("%s", fail ? ":-(" : ":-)");
+    printf("%s", fail == 0 ? ":-)" : ":-(");
 
     return 0;
 }

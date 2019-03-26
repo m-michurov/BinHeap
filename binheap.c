@@ -65,6 +65,8 @@ int ExtractMin(
 
     heap->array[0] = heap->array[--heap->heap_size];
 
+    heap->index[min] = heap->heap_size;
+
     sift(heap, 0);
 
     return min;
