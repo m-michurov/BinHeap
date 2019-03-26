@@ -20,6 +20,9 @@ static void sift(
             heap->array[i] = heap->array[min_child];
             heap->array[min_child] = buff;
 
+            heap->index[heap->array[i]] = i;
+            heap->index[heap->array[min_child]] = min_child;
+
             i = min_child;
         }
 
@@ -31,16 +34,18 @@ static void sift(
 Heap * BuildHeap(
         int * array,
         int * key,
+        int * index,
         const size_t size)
 {
     Heap * new_heap = (Heap *) malloc(sizeof(Heap));
 
-    if (new_heap == NULL || array == NULL || key == NULL)
+    if (new_heap == NULL || array == NULL || key == NULL || index == NULL)
         return NULL;
 
     new_heap->key = key;
     new_heap->array = array;
     new_heap->heap_size = size;
+    new_heap->index = index;
 
     for (long long int i = new_heap->heap_size / 2 - 1; i >= 0; i--) {
         sift(new_heap, (unsigned int) i);
@@ -68,22 +73,27 @@ int ExtractMin(
 
 int DecreaseKey(
         Heap * heap,
-        size_t i,
+        size_t element_value,
         int key)
 {
     static int buff;
 
-    if (key >= heap->key[i]) {
+    if (key >= heap->key[element_value]) {
         return -1;
     }
-    heap->key[heap->array[i]] = key;
+    heap->key[element_value] = key;
 
-    while (i > 0 && heap->key[heap->array[(i - 1) / 2]] > heap->key[heap->array[i]]) {
-        buff = heap->array[i];
-        heap->array[i] = heap->array[(i - 1) / 2];
-        heap->array[(i - 1) / 2] = buff;
+    size_t element_index = (size_t) heap->index[element_value];
 
-        i = (i - 1) / 2;
+    while (element_index > 0 && heap->key[heap->array[(element_index - 1) / 2]] > heap->key[heap->array[element_index]]) {
+        buff = heap->array[element_index];
+        heap->array[element_index] = heap->array[(element_index - 1) / 2];
+        heap->array[(element_index - 1) / 2] = buff;
+
+        heap->index[heap->array[element_index]] = element_index;
+        heap->index[heap->array[(element_index - 1) / 2]] = (element_index - 1) / 2;
+
+        element_index = (element_index - 1) / 2;
     }
 
     return 0;

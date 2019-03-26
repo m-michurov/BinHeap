@@ -6,14 +6,16 @@
 #include <stdlib.h>
 
 typedef struct {
-    int * array;
+    int * array; // values are expected to be in range 0..heap_size
     size_t heap_size;
     int * key;
+    int * index;
 } Heap;
 
 Heap * BuildHeap(
         int * array,
         int * key,
+        int * index,
         size_t size);
 
 int ExtractMin(
@@ -21,7 +23,7 @@ int ExtractMin(
 
 int DecreaseKey(
         Heap * heap,
-        size_t i,
+        size_t element_value,
         int key);
 
 #endif
