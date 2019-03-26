@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+E:/CLionProjects/BinHeap/binheap.h
+stdlib.h
+-
+
+E:/CLionProjects/BinHeap/main.c
+time.h
+-
+stdio.h
+-
+stdlib.h
+-
+limits.h
+-
+binheap.h
+E:/CLionProjects/BinHeap/binheap.h
+
